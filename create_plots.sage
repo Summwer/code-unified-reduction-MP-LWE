@@ -528,7 +528,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
                     legend_handles.append(
                         Line2D([0], [0], color=edge_col, linestyle='--',
                                marker='*', markersize=float(8),
-                               label=r'UB: $16m^5 B^5$ (m = %d)' % degree)
+                               label=r'UB: $16m^7 B^5$ (m = %d)' % degree)
                     )
 
                 ax.legend(handles=legend_handles, loc='upper left', framealpha=float(0.9))
@@ -609,7 +609,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
                 legend_handles.append(
                     Line2D([0], [0], color=edge_col, linestyle='--',
                            marker='*', markersize=float(8),
-                           label=r'UB: $16m^5 B^5$ (m = %d)' % degree)
+                           label=r'UB: $16m^7 B^5$ (m = %d)' % degree)
                 )
 
         ax.legend(handles=legend_handles, loc='upper left', framealpha=float(0.9))
@@ -742,7 +742,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
             intercept = float(coeffs[1])
             
             # Create formula string for legend
-            formula_str = r'$16m^5 B^5$ (B = %d)' %B
+            formula_str = r'$16m^7 B^5$ (B = %d)' %B
             
             # Calculate offset for this B value (same as box plot offset)
             if only_B_min:
