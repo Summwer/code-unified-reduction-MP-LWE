@@ -41,6 +41,13 @@ light_colors = [list_colors[i] for i in range(len(list_colors)) if i%2 == 1]
 ## list of possible markers
 list_markers = ['o', 'v','^','s','p','*']
 
+def format_B_label(B):
+    #if B > 0:
+        #expon = int(np.round(np.log2(B)))
+        #if 2**expon == B:
+        #    return r'$2^{%d}$' % expon
+    return str(B)
+
 #################################
 ###  Plots for D(f) quantity  ###
 #################################
@@ -127,11 +134,14 @@ def plot_Df_unif_varying_B():
     ], loc = 'upper left')
 
     ## position the labels appearing on the x axis
-    plt.xticks(range(len(x_labels)),x_labels)
+    x_positions = [np.log10(B) for B in x_labels]
+    plt.xticks(x_positions, [format_B_label(B) for B in x_labels])
 
-    ## plot the boxplots for A and B with differenc colors and offset
-    draw_plot(data_50, -0.15, 0.25, dark_colors[2], light_colors[2])
-    draw_plot(data_100, +0.15,0.25, dark_colors[3], light_colors[3])
+    ## plot the boxplots for A and B with different colors and offset in log space
+    x_offset = 0.04
+    width = 0.08
+    draw_plot_at_positions(data_50, [x - x_offset for x in x_positions], width, dark_colors[2], light_colors[2])
+    draw_plot_at_positions(data_100, [x + x_offset for x in x_positions], width, dark_colors[3], light_colors[3])
 
     plt.savefig("figures/Df_unif_varying_B.pdf")
     
@@ -474,22 +484,23 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
 
                 ax.set_xlabel('Bound B on the coefficients')
                 ax.set_ylabel(r'$\|V_f^\top \cdot T(y)\|_{max}$')
-                ax.set_title('degree = %d, varying B' % degree)
+                # ax.set_title('degree = %d, varying B' % degree)
                 ax.set_yscale('log', base=2)
                 ax.yaxis.set_major_formatter(FuncFormatter(log2_formatter_vB))
 
-                ## x-axis: evenly spaced, labelled with B values
-                plt.xticks(list(range(len(valid_B))),
-                           [str(B) for B in valid_B])#, ha='right')
+                ## x-axis: log-scaled positions, labelled with B values
+                x_positions = [np.log2(B) for B in valid_B]
+                plt.xticks(x_positions,
+                           [format_B_label(B) for B in valid_B])#, ha='right')
 
                 edge_col = dark_colors[0]
                 fill_col = light_colors[0]
                 y_data   = [data[(degree, B)] for B in valid_B]
-                pos      = [float(j) for j in range(len(valid_B))]
+                pos      = [float(np.log2(B)) for B in valid_B]
 
                 ax.boxplot(y_data,
                            positions=pos,
-                           widths=float(0.5),
+                           widths=float(0.25),
                            patch_artist=True,
                            manage_ticks=False,
                            showfliers=False,
@@ -517,7 +528,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
                     legend_handles.append(
                         Line2D([0], [0], color=edge_col, linestyle='--',
                                marker='*', markersize=float(8),
-                               label=r'UB: $16m^7 B^5$ (m = %d)' % degree)
+                               label=r'UB: $16m^5 B^5$ (m = %d)' % degree)
                     )
 
                 ax.legend(handles=legend_handles, loc='upper left', framealpha=float(0.9))
@@ -544,9 +555,10 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
         ax.set_yscale('log', base=2)
         ax.yaxis.set_major_formatter(FuncFormatter(log2_formatter_vB))
 
-        ## evenly-spaced x positions, labelled with actual B values
-        plt.xticks(list(range(len(all_B_vary))),
-                   [str(B) for B in all_B_vary], rotation=30, ha='right')
+        ## log-scaled x positions, labelled with actual B values
+        x_positions = [np.log2(B) for B in all_B_vary]
+        plt.xticks(x_positions,
+                   [format_B_label(B) for B in all_B_vary], rotation=30, ha='right')
 
         ## legend: one patch per degree
         legend_handles = [
@@ -558,7 +570,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
 
         ## box width / offset
         box_width_vB = float(0.6) / max(len(plot_degrees), 1)
-        actual_box_width_vB = box_width_vB * 0.85
+        actual_box_width_vB = box_width_vB * 0.65
 
         for (i, degree) in enumerate(plot_degrees):
             color_idx = i % len(dark_colors)
@@ -568,7 +580,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
             valid_B = [B for B in all_B_vary if (degree, B) in data]
             y_data  = [data[(degree, B)] for B in valid_B]
             offset_val = box_width_vB * (i - len(plot_degrees) / 2.0)
-            pos = [float(all_B_vary.index(B) + offset_val) for B in valid_B]
+            pos = [float(np.log2(B) + offset_val) for B in valid_B]
 
             if y_data:
                 ax.boxplot(y_data,
@@ -589,7 +601,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
             ## optional upper-bound curve
             if show_upperbound:
                 ub_values = [float(norm_upperbound(degree, B)) for B in valid_B]
-                ub_pos    = [float(all_B_vary.index(B) + offset_val) for B in valid_B]
+                ub_pos    = [float(np.log2(B) + offset_val) for B in valid_B]
                 ax.plot(ub_pos, ub_values,
                         color=edge_col,
                         linestyle='--', linewidth=float(2),
@@ -597,7 +609,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
                 legend_handles.append(
                     Line2D([0], [0], color=edge_col, linestyle='--',
                            marker='*', markersize=float(8),
-                           label=r'UB: $16m^7 B^5$ (m = %d)' % degree)
+                           label=r'UB: $16m^5 B^5$ (m = %d)' % degree)
                 )
 
         ax.legend(handles=legend_handles, loc='upper left', framealpha=float(0.9))
@@ -730,7 +742,7 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
             intercept = float(coeffs[1])
             
             # Create formula string for legend
-            formula_str = r'$16m^7 B^5$ (B = %d)' %B
+            formula_str = r'$16m^5 B^5$ (B = %d)' %B
             
             # Calculate offset for this B value (same as box plot offset)
             if only_B_min:
@@ -742,11 +754,11 @@ def plot_min_norm_Hy(show_upperbound=False, only_B_min=False,
             valid_x_positions = [np.log2(d) for d in valid_degrees]
             ub_x_positions = [float(x + offset_val) for x in valid_x_positions]
             
-            # Plot upperbound points only (no connecting line, no star marker)
+            # Plot upperbound points only (no connecting line, only star marker)
             # Ensure all parameters are Python native types
             line = ax.plot(ub_x_positions, ub_values,
                           color=dark_colors[i%len(dark_colors)],
-                          linestyle='none', linewidth=float(0),
+                          linestyle='--', linewidth=float(2),
                           marker='*', markersize=float(12), alpha=float(0.8))
             line_handles.append((line[0], f'UB (B={B}): {formula_str}'))
     
