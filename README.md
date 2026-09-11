@@ -3,7 +3,7 @@
 This repository contains the artifacts associated to the article (that was used to run the experiments and produce the figures displayed in the article)
 
 **A unified reduction from RLWE to MP-LWE**
-based on the code [code-MPLWE](https://plmlab.math.cnrs.fr/apelletm/code-mplwe) implemented by _Rahinatou Yuh Njah Nchiwo and Alice Pellet-Mary_
+by _Wenwen Xia_ based on the code [code-MPLWE](https://plmlab.math.cnrs.fr/apelletm/code-mplwe) implemented by _Rahinatou Yuh Njah Nchiwo and Alice Pellet-Mary_
 ATTENTION: We remain the code `random_polynomials.sage`, `test_monogenic.sage`, `test_Vandermonde.sage` from the original repository, and create the new code `test_Hankel_matrix.sage`, `test_sigma_beta_equation.sage` and `test_min_norm_Hy.sage` in the new repository. 
 
 We add the new code into `run_tests.sage` and `create_plots.sage` to run the new tests and create the new plots.
