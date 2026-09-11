@@ -1,6 +1,6 @@
 # code for unified reduction from RLWE to MP-LWE
 
-This repository contains the artifacts associated to the article (that was used to run the experiments and produce the figures displayed in the article)
+This repository contains the artifacts associated to the article _A unified reduction from RLWE to MP-LWE_ (that was used to run the experiments and produce the figures displayed in that article)
 
 **A unified reduction from RLWE to MP-LWE**
 by _Wenwen Xia_ based on the code [code-MPLWE](https://plmlab.math.cnrs.fr/apelletm/code-mplwe) implemented by _Rahinatou Yuh Njah Nchiwo and Alice Pellet-Mary_
